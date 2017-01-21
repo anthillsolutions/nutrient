@@ -1,0 +1,8 @@
+{
+  "preset": "node-style-guide",
+  "requireTrailingComma": {
+    "ignoreSingleValue": true,
+    "ignoreSingleLine": true
+  },
+  "excludeFiles": ["node_modules/**"]
+}
