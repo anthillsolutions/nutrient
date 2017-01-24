@@ -8,6 +8,9 @@ import browserSync from 'browser-sync';
 
 const $ = gulpLoadPlugins();
 const SERVER = 'dist/server';
+const PORT = process.env.PORT || 5000;
+const ENV = process.env.NODE_ENV || 'development';
+
 browserSync.create();
 dotenv.config({silent: true});
 
@@ -52,8 +55,14 @@ gulp.task('reload', ['default'], () => {
  * launch an express server
  */
 gulp.task('serve', () => {
-  const server = $.liveServer.new('server/server.js');
-  server.start();
+  let server;
+  if (ENV === 'production') {
+    server = $.liveServer(SERVER + '/server.js', undefined, false);
+    server.start();
+  } else {
+    server = $.liveServer(SERVER + '/server.js');
+    server.start();
+  }
 });
 
 /**
@@ -71,3 +80,12 @@ gulp.task('clean', () => {
  * Build the project and test for it's consistency
  */
 gulp.task('test', ['jscs']);
+
+/**
+ * Task build
+ * Build the project
+ */
+gulp.task('build', ['clean'], () => {
+  return gulp.src('server/**/*.js')
+    .pipe(gulp.dest(SERVER));
+});
