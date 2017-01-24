@@ -1,6 +1,6 @@
 {
   "name": "nutrient",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The nutritional fact database's website",
   "main": "index.js",
   "scripts": {
