@@ -4,6 +4,7 @@
   "description": "The nutritional fact database's website",
   "main": "index.js",
   "scripts": {
+    "postinstall": "gulp build",
     "start": "gulp serve",
     "test": "gulp test"
   },
