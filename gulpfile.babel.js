@@ -75,11 +75,26 @@ gulp.task('clean', () => {
   ]);
 });
 
+gulp.task('pre-test', () => {
+  return gulp.src(['server/**/*.js'])
+    // Covering files
+    .pipe($.istanbul())
+    // Force `require` to return covered files
+    .pipe($.istanbul.hookRequire());
+});
+
 /**
  * Task test
  * Build the project and test for it's consistency
  */
-gulp.task('test', ['jscs']);
+gulp.task('test', ['jscs', 'pre-test'], () => {
+  return gulp.src('server/tests/**/*.js')
+    .pipe($.mocha())
+    .pipe($.istanbul.writeReports())
+    .pipe($.istanbul.enforceThresholds({
+      thresholds: { global: 50 }
+    }));
+});
 
 /**
  * Task build

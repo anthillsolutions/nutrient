@@ -10,6 +10,8 @@ var index = require('./routes/index.js');
 
 app.use(index);
 
-app.listen(PORT, () => {
+var server = app.listen(PORT, () => {
   console.log('app listening on port ' + PORT + '!');
 });
+
+module.exports = server;
