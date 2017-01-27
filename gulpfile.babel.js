@@ -107,7 +107,8 @@ gulp.task('test', ['jscs', 'pre-test'], () => {
  */
 gulp.task('coverage', ['test'], () => {
   if (process.env.NODE_ENV === 'test-ci') {
-    return gulp.src('coverage/**/lcov.info');
+    return gulp.src('coverage/**/lcov.info')
+      .pipe($.coveralls());
   }
 });
 
