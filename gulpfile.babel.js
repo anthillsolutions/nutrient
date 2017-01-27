@@ -57,10 +57,10 @@ gulp.task('reload', ['default'], () => {
 gulp.task('serve', () => {
   let server;
   if (ENV === 'production') {
-    server = $.liveServer(SERVER + '/server.js', undefined, false);
+    server = $.liveServer(SERVER + '/bin/www', undefined, false);
     server.start();
   } else {
-    server = $.liveServer(SERVER + '/server.js');
+    server = $.liveServer(SERVER + '/bin/www');
     server.start();
   }
 });
@@ -117,6 +117,8 @@ gulp.task('coverage', ['test'], () => {
  * Build the project
  */
 gulp.task('build', ['clean'], () => {
-  return gulp.src('server/**/*.js')
+  return gulp.src([
+    'server/**/*'
+  ])
     .pipe(gulp.dest(SERVER));
 });

@@ -6,10 +6,29 @@ require('dotenv').config({ silent: true });
 
 const app = express();
 const index = require('./routes/index.js');
-const PORT = port.getNormalizedPort(process.env.PORT);
 
+/**
+ * Routes for the API
+ */
 app.use(index);
 
-module.exports = app.listen(PORT, () => {
-  console.log('app listening on port ' + PORT + '!');
+/**
+ * Catches Error 404
+ */
+app.use((req, res, next) => {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
+
+/**
+ * Error catcher
+ */
+app.use((err, req, res, next) => {
+  res.status(err.status);
+  res.json({
+    error: err.message
+  });
+});
+
+module.exports = app;

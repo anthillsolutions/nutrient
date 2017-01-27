@@ -2,23 +2,13 @@
 
 const chai = require('chai');
 const should = chai.should();
-const chaiHttp = require('chai-http');
+const server = require('../../server.js');
 
-chai.use(chaiHttp);
+const request = require('supertest');
 
 describe('API tests - index', () => {
-  var server;
-
-  beforeEach(() => {
-    server = require('../../server.js');
-  });
-
-  afterEach(done => {
-    server.close(done);
-  });
-
   it('should return 200 for /', done => {
-    chai.request(server)
+    request(server)
       .get('/')
       .end((err, res) => {
         should.not.exist(err);
@@ -29,7 +19,7 @@ describe('API tests - index', () => {
   });
 
   it('should return 404 for /404', done => {
-    chai.request(server)
+    request(server)
       .get('/404')
       .end((err, res) => {
         res.status.should.equal(404);
