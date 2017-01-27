@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "gulp build",
     "start": "gulp serve",
-    "test": "gulp test"
+    "test": "gulp coverage"
   },
   "repository": {
     "type": "git",
@@ -42,6 +42,7 @@
     "gulp-jscs": "^4.0.0",
     "gulp-jshint": "^2.0.4",
     "gulp-mocha": "^3.0.1",
-    "istanbul": "^0.4.5"
+    "istanbul": "^0.4.5",
+    "jshint": "^2.9.4"
   }
 }

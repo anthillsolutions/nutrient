@@ -3,13 +3,14 @@
 const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
+
 chai.use(chaiHttp);
 
-describe('API tests', () => {
+describe('API tests - index', () => {
   var server;
 
   beforeEach(() => {
-    server = require('../server.js');
+    server = require('../../server.js');
   });
 
   afterEach(done => {

@@ -6,3 +6,29 @@ The nutritional fact database's website.
 [![Gemnasium](https://img.shields.io/gemnasium/anthillsolutions/nutrient.svg)]()
 [![label](https://img.shields.io/github/issues/anthillsolutions/nutrient.svg)]()
 [![license](https://img.shields.io/github/license/anthillsolutions/nutrient.svg)]()
+
+## Install
+
+```
+$ npm install
+```
+
+## Test
+
+```
+$ npm test
+```
+
+## Launch server
+
+```
+$ npm start
+```
+
+## Authors
+
+* Pierre Repetto-Andipatin - <pierre@anthillsolutions.ch>
+
+## License
+
+MIT

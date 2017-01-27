@@ -75,11 +75,16 @@ gulp.task('clean', () => {
   ]);
 });
 
+/**
+ * Task pre-test
+ * Runs istanbul to get all files to cover
+ */
 gulp.task('pre-test', () => {
-  return gulp.src(['server/**/*.js'])
-    // Covering files
+  return gulp.src([
+    'server/**/*.js',
+    '!server/tests/**/*.js',
+  ])
     .pipe($.istanbul())
-    // Force `require` to return covered files
     .pipe($.istanbul.hookRequire());
 });
 
@@ -92,8 +97,18 @@ gulp.task('test', ['jscs', 'pre-test'], () => {
     .pipe($.mocha())
     .pipe($.istanbul.writeReports())
     .pipe($.istanbul.enforceThresholds({
-      thresholds: { global: 50 }
+      thresholds: { global: 70 }
     }));
+});
+
+/**
+ * Task coverage
+ * Sends coverage tests to coveralls
+ */
+gulp.task('coverage', ['test'], () => {
+  if (process.env.NODE_ENV === 'test-ci') {
+    return gulp.src('coverage/**/lcov.info');
+  }
 });
 
 /**

@@ -1,17 +1,15 @@
 'use strict';
 
-var express = require('express');
-var dotenv = require('dotenv');
-dotenv.config({silent: true});
+const express = require('express');
+const port = require('./utils/port.js');
+require('dotenv').config({ silent: true });
 
-var app = express();
-var PORT = process.env.PORT || 3000;
-var index = require('./routes/index.js');
+const app = express();
+const index = require('./routes/index.js');
+const PORT = port.getNormalizedPort(process.env.PORT);
 
 app.use(index);
 
-var server = app.listen(PORT, () => {
+module.exports = app.listen(PORT, () => {
   console.log('app listening on port ' + PORT + '!');
 });
-
-module.exports = server;
