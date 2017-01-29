@@ -6,11 +6,13 @@ require('dotenv').config({ silent: true });
 
 const app = express();
 const index = require('./routes/index.js');
+const users = require('./routes/users.js');
 
 /**
  * Routes for the API
  */
 app.use(index);
+app.use('/users', users);
 
 /**
  * Catches Error 404
