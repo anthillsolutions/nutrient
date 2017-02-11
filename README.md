@@ -14,6 +14,12 @@ The nutritional fact database's website.
 $ npm install
 ```
 
+You need mongodb running locally. Then:
+
+```
+$ export MONGODB_URI=XXXX
+```
+
 ## Test
 
 ```
