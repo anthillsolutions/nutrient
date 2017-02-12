@@ -1,12 +1,23 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const port = require('./utils/port.js');
 require('dotenv').config({ silent: true });
 
 const app = express();
 const index = require('./routes/index.js');
 const users = require('./routes/users.js');
+
+app.use(bodyParser.json());
+
+/**
+ * Output current route
+ */
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 /**
  * Routes for the API

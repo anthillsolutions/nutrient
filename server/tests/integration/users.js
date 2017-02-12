@@ -23,6 +23,39 @@ describe('API tests - users', () => {
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
+
+  it('should add an user', done => {
+    const user = {
+      username: 'Pierre',
+      fullname: 'Pierre Jean Marcelino Repetto-Andipatin',
+      email: 'pierre@anthillsolutions.ch',
+      passord: '1234abcd',
+    };
+    request(server)
+      .post('/users')
+      .send(user)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        res.body.should.be.a('object');
+        res.body.should.have.property('message');
+        done();
+      });
+  });
+
+  it('should fail to add a wrong user', done => {
+    const user = {
+      pseudo: 'Pierre',
+    };
+    request(server)
+      .post('/users')
+      .send(user)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        res.body.should.be.a('object');
+        res.body.should.have.property('error');
+        done();
+      });
+  });
 });
 
 after(done => {
