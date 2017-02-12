@@ -56,6 +56,28 @@ describe('API tests - users', () => {
         done();
       });
   });
+
+  it('should fail to update a wrong user', done => {
+    request(server)
+      .put('/users/1234')
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        res.body.should.be.a('object');
+        res.body.should.have.property('error');
+        done();
+      });
+  });
+
+  it('should fail to delete a wrong user', done => {
+    request(server)
+      .delete('/users/1234')
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        res.body.should.be.a('object');
+        res.body.should.have.property('error');
+        done();
+      });
+  });
 });
 
 after(done => {
