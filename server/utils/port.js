@@ -3,7 +3,7 @@
 const PORT = 3000;
 
 module.exports = {
-  getNormalizedPort: (port = PORT) => {
+  getNormalizedPort: (port) => {
     const normalizedPort = parseInt(port, 10);
 
     if (isNaN(normalizedPort)) {
