@@ -12,9 +12,12 @@ require('./index.js');
 describe('API tests - users', () => {
   before(done => {
     if (mongoose.connection.db) {
-      return done();
+      return mongoose.connection.db.dropDatabase(done);
     }
-    mongoose.connect(process.env.MONGODB_URI, done);
+    mongoose.connect(process.env.MONGODB_URI)
+      .then(() => {
+        mongoose.connection.db.dropDatabase(done);
+      });
   });
 
   it('should return 200 for /users', done => {
@@ -25,45 +28,69 @@ describe('API tests - users', () => {
   });
 
   it('should add/get/update/delete a user', done => {
-    var user = {
+    let user = {
       username: 'Pierre',
       fullname: 'Pierre Jean Marcelino Repetto-Andipatin',
       email: 'pierre@anthillsolutions.ch',
       password: '1234abcd',
     };
+    let uri;
     request(server)
       .post('/users')
       .send(user)
       .expect('Content-Type', /json/)
-      .then((res) => {
-        var uri = '/users/'.concat(res.body._id);
-        request(server)
+      .then(res => {
+        uri = '/users/'.concat(res.body._id);
+        return request(server)
           .get(uri)
           .expect('Content-Type', /json/)
-          .end((err, res)=> {
-            res.body.should.be.a('object');
+          .expect(200);
+      })
+      .then(res => {
+        return request(server)
+          .put(uri)
+          .send(user)
+          .expect('Content-Type', /json/)
+          .expect(200, {
+            message: 'User details unchanged',
           });
+      })
+      .then(res => {
         user = {
           username: 'Pierre',
           fullname: 'Pierre Jean Marcelino Repetto-Andipatin',
           email: 'pierre@anthillsolutions.ch',
           password: 'qqqqqq',
         };
-        request(server)
+        return request(server)
           .put(uri)
           .send(user)
           .expect('Content-Type', /json/)
-          .then((res) => {
-            request(server)
-              .delete(uri)
-              .expect('Content-Type', /json/)
-              .end((err, res) => {
-                res.body.should.be.a('object');
-                res.body.should.have.property('message');
-                done();
-              });
-          });
+          .expect(200);
+      })
+      .then(res => {
+        res.body.should.be.a('object');
+        return request(server)
+          .delete(uri)
+          .expect('Content-Type', /json/)
+          .expect(200);
+      })
+      .then(res => {
+        res.body.should.be.a('object');
+        done();
+      })
+      .catch(err => {
+        done(err);
       });
+  });
+
+  it('should fail to get an inexistant user', done => {
+    request(server)
+      .get('/users/1209')
+      .expect('Content-Type', /json/)
+      .expect(
+        404,
+        done);
   });
 
   it('should fail to add a wrong user', done => {
@@ -74,11 +101,7 @@ describe('API tests - users', () => {
       .post('/users')
       .send(user)
       .expect('Content-Type', /json/)
-      .end((err, res) => {
-        res.body.should.be.a('object');
-        res.body.should.have.property('error');
-        done();
-      });
+      .expect(500, done);
   });
 
   it('should fail to update a wrong user', done => {
@@ -92,22 +115,14 @@ describe('API tests - users', () => {
       .put('/users/1234')
       .send(user)
       .expect('Content-Type', /json/)
-      .end((err, res) => {
-        res.body.should.be.a('object');
-        res.body.should.have.property('error');
-        done();
-      });
+      .expect(500, done);
   });
 
   it('should fail to delete a wrong user', done => {
     request(server)
       .delete('/users/1234')
       .expect('Content-Type', /json/)
-      .end((err, res) => {
-        res.body.should.be.a('object');
-        res.body.should.have.property('error');
-        done();
-      });
+      .expect(500, done);
   });
 });
 

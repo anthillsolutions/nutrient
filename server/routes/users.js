@@ -16,8 +16,8 @@ router.post('/', (req, res, next) => {
   });
   user.save(err => {
     if (err) {
-      console.log(err);
-      return res.status(500).json({ error: err });
+      err.status = 500;
+      return next(err);
     }
     res.json({
       _id: user._id,
@@ -29,16 +29,23 @@ router.post('/', (req, res, next) => {
 router.get('/', (req, res, next) => {
   Users.find({},
     (err, doc) => {
-      if (err) { return res.status(500).json({ error: err }); }
+      /* istanbul ignore if */
+      if (err) {
+        err.status = 500;
+        return next(err);
+      }
       res.json(doc);
     });
 });
 
 /* GET an exsiting user by id */
 router.get('/:id', (req, res, next) => {
-  Users.findOne ({_id: req.params.id},
+  Users.findOne({_id: req.params.id},
     (err, doc) => {
-      if (err) { return res.status(500).json({ error: err }); }
+      if (err) {
+        err.status = 404;
+        return next(err);
+      }
       res.json(doc);
     });
 });
@@ -70,7 +77,9 @@ router.put('/:id', (req, res, next) => {
             }
           });
       } else {
-        res.json({error: 'User does not exist'});
+        const err = new Error('User does not exist');
+        err.status = 500;
+        next(err);
       }
     });
 });
@@ -78,7 +87,10 @@ router.put('/:id', (req, res, next) => {
 /* DELETE remove an user */
 router.delete('/:id', (req, res, next) => {
   Users.remove({ _id: req.params.id }, err => {
-    if (err) { return res.status(500).json({ error: err }); }
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
     res.json({
       message: 'User #' + req.params.id + ' has been removed.',
     });
