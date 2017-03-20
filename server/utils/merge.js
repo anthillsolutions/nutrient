@@ -12,11 +12,16 @@ module.exports = {
             if (Object.keys(src[attribL1][attribL2]).length !== 0) {
               for (var attribL3 in src[attribL1][attribL2]) {
                 if (typeof src[attribL1][attribL2][attribL3] === 'string') {
+                  if (!dest[attribL1].hasOwnProperty(attribL2)) {
+                    // Initializes an empty element
+                    dest[attribL1][attribL2] = {};
+                  }
                   dest[attribL1][attribL2][attribL3] =
                     src[attribL1][attribL2][attribL3];
                 }
               }
             } else {
+              // Removes the object if it has no sub elements
               dest[attribL1][attribL2] = {};
             }
           }
