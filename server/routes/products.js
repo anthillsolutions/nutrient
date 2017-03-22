@@ -54,11 +54,21 @@ router.put('/:productname', (req, res, next) => {
   var bodyParser = require('body-parser');
   router.use(bodyParser.json());
 
-  // Check if a product exists
+  var updatedProduct = req.body;
   var productName = req.params.productname;
+
   Products.findOne({productname: productName}, (err, product) => {
       if (product) {
-        var updatedProduct = req.body;
+        // Check whether updating product is empty
+        if (Object.keys(updatedProduct).length === 0 &&
+          updatedProduct.constructor === Object) {
+          return res.json({ error: 'Update product cannot be empty' });
+        }
+        // Check whether updating product name is empty
+        if (updatedProduct.hasOwnProperty('productname') &&
+          updatedProduct.productname.length === 0) {
+          return res.json({ error: 'Update product name cannot be empty' });
+        }
         product = merge.mergeObjects(product, updatedProduct);
         product.save(err => {
           if (err) {
