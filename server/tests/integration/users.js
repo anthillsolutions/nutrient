@@ -36,13 +36,37 @@ describe('API tests - users', () => {
       .send(user)
       .expect('Content-Type', /json/)
       .then((res) => {
-        var uri = '/users/'.concat(res.body._id);
+        var uri = '/users/xxxx';
+        request(server)
+          .get(uri)
+          .expect('Content-Type', /json/)
+          .end((err, res)=> {
+            res.status = 500;
+          });
+
+        uri = '/users/'.concat(res.body._id) ;
         request(server)
           .get(uri)
           .expect('Content-Type', /json/)
           .end((err, res)=> {
             res.body.should.be.a('object');
           });
+
+        user = {
+          username: 'Pierre',
+          fullname: 'Pierre Jean Marcelino Repetto-Andipatin',
+          email: 'pierre@anthillsolutions.ch',
+          password: '1234abcd',
+        };
+        request(server)
+          .put(uri)
+          .send(user)
+          .expect('Content-Type', /json/)
+          .end((err, res) => {
+            res.body.should.be.a('object');
+            res.body.message = 'User details unchanged';
+          });
+
         user = {
           username: 'Pierre',
           fullname: 'Pierre Jean Marcelino Repetto-Andipatin',
@@ -59,7 +83,6 @@ describe('API tests - users', () => {
               .expect('Content-Type', /json/)
               .end((err, res) => {
                 res.body.should.be.a('object');
-                res.body.should.have.property('message');
                 done();
               });
           });
@@ -104,8 +127,7 @@ describe('API tests - users', () => {
       .delete('/users/1234')
       .expect('Content-Type', /json/)
       .end((err, res) => {
-        res.body.should.be.a('object');
-        res.body.should.have.property('error');
+        res.status = 500;
         done();
       });
   });
