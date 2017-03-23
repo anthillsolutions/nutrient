@@ -71,6 +71,7 @@ router.put('/:productname', (req, res, next) => {
         }
         product = merge.mergeObjects(product, updatedProduct);
         product.save(err => {
+          /* istanbul ignore if */
           if (err) {
             console.log(err);
             return res.status(500).json({ error: err });
