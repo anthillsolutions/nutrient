@@ -63,18 +63,16 @@ router.put('/:id', (req, res, next) => {
         Users.findOneAndUpdate({_id: userID}, modifiedDocument,
           {returnNewDocument: true},
           (err, doc) => {
-            if (doc) {
-              // Check if the original document is updated or not
-              var updatedDocument = doc;
-              var changed = false;
-              for (var attribute in modifiedDocument) {
-                if (updatedDocument[attribute] !==
-                  modifiedDocument[attribute]) {
-                  return res.json({message: 'User details changed'});
-                }
+            // Check if the original document is updated or not
+            var updatedDocument = doc;
+            var changed = false;
+            for (var attribute in modifiedDocument) {
+              if (updatedDocument[attribute] !==
+                modifiedDocument[attribute]) {
+                return res.json({message: 'User details changed'});
               }
-              res.json({message: 'User details unchanged'});
             }
+            res.json({message: 'User details unchanged'});
           });
       } else {
         const err = new Error('User does not exist');

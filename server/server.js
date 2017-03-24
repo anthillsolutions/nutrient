@@ -8,6 +8,7 @@ require('dotenv').config({ silent: true });
 const app = express();
 const index = require('./routes/index.js');
 const users = require('./routes/users.js');
+const products = require('./routes/products.js');
 
 app.use(bodyParser.json());
 
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
  */
 app.use(index);
 app.use('/users', users);
+app.use('/products', products);
 
 /**
  * Catches Error 404
