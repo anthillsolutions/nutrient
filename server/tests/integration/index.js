@@ -3,6 +3,7 @@
 const chai = require('chai');
 const should = chai.should();
 const server = require('../../server.js');
+const mw = require('../../utils/tokens.js').getTokenMiddleware();
 
 const request = require('supertest');
 const mongoose = require('mongoose');
@@ -29,6 +30,19 @@ describe('API tests - index', () => {
       .get('/404')
       .expect('Content-Type', /json/)
       .expect(404, done);
+  });
+
+  it('should return 401 for /restricted with no token', done => {
+    request(server)
+      .get('/restricted')
+      .expect(401, done);
+  });
+
+  it('should return 200 for /restricted with a token', done => {
+    request(server)
+      .get('/restricted')
+      .set('Authorization', mw.getToken({ id: 'someID' }))
+      .expect(200, done);
   });
 });
 
