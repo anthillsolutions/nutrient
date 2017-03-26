@@ -11,10 +11,21 @@ router.post('/', (req, res, next) => {
   router.use(bodyParser.json());
 
   var productDocument = req.body;
+
+  // Check whether new product is empty
+  if (Object.keys(productDocument).length === 0) {
+    return res.json({ error: 'New product cannot be empty' });
+  }
+  // Check whether new product name is empty
+  if (productDocument.hasOwnProperty('productname') &&
+    productDocument.productname.length === 0) {
+    return res.json({ error: 'New product name cannot be empty' });
+  }
+
   var product = new Products();
 
   for (var attribute in productDocument) {
-    if (productDocument[attribute] || productDocument[attribute].length) {
+    if (productDocument[attribute]) {
       product[attribute] = productDocument[attribute];
     }
   }
@@ -45,7 +56,11 @@ router.get('/:productname', (req, res, next) => {
   Products.findOne ({productname: req.params.productname},
     (err, doc) => {
       if (err) { return res.status(500).json({ error: err }); }
-      res.json(doc);
+      if (doc) {
+        res.json(doc);
+      } else {
+        res.json({error: 'Product does not exist'});
+      }
     });
 });
 
@@ -60,8 +75,7 @@ router.put('/:productname', (req, res, next) => {
   Products.findOne({productname: productName}, (err, product) => {
       if (product) {
         // Check whether updating product is empty
-        if (Object.keys(updatedProduct).length === 0 &&
-          updatedProduct.constructor === Object) {
+        if (Object.keys(updatedProduct).length === 0) {
           return res.json({ error: 'Update product cannot be empty' });
         }
         // Check whether updating product name is empty
