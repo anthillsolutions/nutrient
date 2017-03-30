@@ -17,15 +17,15 @@ describe('API tests - products', () => {
     mongoose.connect(process.env.MONGODB_URI, done);
   });
 
-  it('should return 200 for /products', done => {
+  it('should return 200 for /api/products', done => {
     request(server)
-      .get('/products')
+      .get('/api/products')
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
 
   it('should fail to return non existing product', done => {
-    var uri = '/products/'.concat('Twirl');
+    var uri = '/api/products/'.concat('Twirl');
     request(server)
       .get(uri)
       .expect('Content-Type', /json/)
@@ -39,7 +39,7 @@ describe('API tests - products', () => {
   });
 
   it('should delete existing product', done => {
-    var uri = '/products/'.concat('Twirl');
+    var uri = '/api/products/'.concat('Twirl');
     request(server)
       .delete(uri)
       .expect('Content-Type', /json/)
@@ -55,7 +55,7 @@ describe('API tests - products', () => {
   it('should fail to add an empty object as the product', done => {
     var product  = {
     };
-    var uri = '/products';
+    var uri = '/api/products';
     request(server)
       .post(uri)
       .send(product)
@@ -80,7 +80,7 @@ describe('API tests - products', () => {
         },
       },
     };
-    var uri = '/products';
+    var uri = '/api/products';
     request(server)
       .post(uri)
       .send(product)
@@ -106,12 +106,12 @@ describe('API tests - products', () => {
       },
     };
     request(server)
-      .post('/products')
+      .post('/api/products')
       .send(product)
       .expect('Content-Type', /json/)
       .then((res) => {
         request(server)
-          .post('/products')
+          .post('/api/products')
           .send(product)
           .expect('Content-Type', /json/)
           .then((res) => {
@@ -119,7 +119,7 @@ describe('API tests - products', () => {
               res.body.should.be.a('object');
               res.body.should.have.property('error');
             }
-            var uri = '/products/'.concat(product.productname);
+            var uri = '/api/products/'.concat(product.productname);
             request(server)
               .delete(uri)
               .expect('Content-Type', /json/)
@@ -145,7 +145,7 @@ describe('API tests - products', () => {
         },
       },
     };
-    var uri = '/products/'.concat(product.productname);
+    var uri = '/api/products/'.concat(product.productname);
     request(server)
       .put(uri)
       .send(product)
@@ -174,11 +174,11 @@ describe('API tests - products', () => {
       },
     };
     request(server)
-      .post('/products')
+      .post('/api/products')
       .send(product)
       .expect('Content-Type', /json/)
       .then((res) => {
-        var uri = '/products/'.concat(product.productname);
+        var uri = '/api/products/'.concat(product.productname);
         request(server)
           .get(uri)
           .expect('Content-Type', /json/)
@@ -230,11 +230,11 @@ describe('API tests - products', () => {
       },
     };
     request(server)
-      .post('/products')
+      .post('/api/products')
       .send(product)
       .expect('Content-Type', /json/)
       .then((res) => {
-        var uri = '/products/'.concat(res.body.productname);
+        var uri = '/api/products/'.concat(res.body.productname);
         request(server)
           .get(uri)
           .expect('Content-Type', /json/)
@@ -293,11 +293,11 @@ describe('API tests - products', () => {
       },
     };
     request(server)
-      .post('/products')
+      .post('/api/products')
       .send(product)
       .expect('Content-Type', /json/)
       .then((res) => {
-        var uri = '/products/'.concat(res.body.productname);
+        var uri = '/api/products/'.concat(res.body.productname);
         request(server)
           .get(uri)
           .expect('Content-Type', /json/)

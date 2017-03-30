@@ -22,7 +22,7 @@ describe('API tests - users', () => {
 
   it('should return 200 for /users', done => {
     request(server)
-      .get('/users')
+      .get('/api/users')
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
@@ -36,11 +36,11 @@ describe('API tests - users', () => {
     };
     let uri;
     request(server)
-      .post('/users')
+      .post('/api/users')
       .send(user)
       .expect('Content-Type', /json/)
       .then(res => {
-        uri = '/users/'.concat(res.body._id);
+        uri = '/api/users/'.concat(res.body._id);
         return request(server)
           .get(uri)
           .expect('Content-Type', /json/)
@@ -86,7 +86,7 @@ describe('API tests - users', () => {
 
   it('should fail to get an inexistant user', done => {
     request(server)
-      .get('/users/1209')
+      .get('/api/users/1209')
       .expect('Content-Type', /json/)
       .expect(
         404,
@@ -98,7 +98,7 @@ describe('API tests - users', () => {
       pseudo: 'Pierre',
     };
     request(server)
-      .post('/users')
+      .post('/api/users')
       .send(user)
       .expect('Content-Type', /json/)
       .expect(500, done);
@@ -112,7 +112,7 @@ describe('API tests - users', () => {
       password: 'abcd1234',
     };
     request(server)
-      .put('/users/1234')
+      .put('/api/users/1234')
       .send(user)
       .expect('Content-Type', /json/)
       .expect(500, done);
@@ -120,7 +120,7 @@ describe('API tests - users', () => {
 
   it('should fail to delete a wrong user', done => {
     request(server)
-      .delete('/users/1234')
+      .delete('/api/users/1234')
       .expect('Content-Type', /json/)
       .expect(500, done);
   });

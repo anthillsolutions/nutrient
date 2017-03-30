@@ -23,9 +23,9 @@ app.use((req, res, next) => {
 /**
  * Routes for the API
  */
-app.use(index);
-app.use('/users', users);
-app.use('/products', products);
+app.use('/api', index);
+app.use('/api/users', users);
+app.use('/api/products', products);
 
 /**
  * Catches Error 404
