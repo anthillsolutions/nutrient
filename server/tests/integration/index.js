@@ -18,29 +18,29 @@ describe('API tests - index', () => {
     mongoose.connect(process.env.MONGODB_URI, done);
   });
 
-  it('should return 200 for /', done => {
+  it('should return 200 for /api/', done => {
     request(server)
-      .get('/')
+      .get('/api/')
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
 
-  it('should return 404 for /404', done => {
+  it('should return 404 for /api/404', done => {
     request(server)
-      .get('/404')
+      .get('/api/404')
       .expect('Content-Type', /json/)
       .expect(404, done);
   });
 
-  it('should return 401 for /restricted with no token', done => {
+  it('should return 401 for /api/restricted with no token', done => {
     request(server)
-      .get('/restricted')
+      .get('/api/restricted')
       .expect(401, done);
   });
 
-  it('should return 200 for /restricted with a token', done => {
+  it('should return 200 for /api/restricted with a token', done => {
     request(server)
-      .get('/restricted')
+      .get('/api/restricted')
       .set('Authorization', mw.getToken({ id: 'someID' }))
       .expect(200, done);
   });
