@@ -9,6 +9,7 @@ const app = express();
 const index = require('./routes/index.js');
 const users = require('./routes/users.js');
 const products = require('./routes/products.js');
+const brands = require('./routes/brands.js');
 
 app.use(bodyParser.json());
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 app.use('/api', index);
 app.use('/api/users', users);
 app.use('/api/products', products);
+app.use('/api/brands', brands);
 
 /**
  * Catches Error 404
