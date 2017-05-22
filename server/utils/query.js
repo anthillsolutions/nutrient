@@ -5,6 +5,7 @@ module.exports = {
     let lt, gt, val, tmp;
     let result = {};
     for (let param in queryObject) {
+      /* istanbul ignore else */
       if (queryObject.hasOwnProperty(param)) {
         lt = true;
         gt = true;

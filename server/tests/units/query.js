@@ -30,8 +30,8 @@ describe('Unit tests - utils/query', () => {
       res.should.be.deep.equal({ calories: { $lte: '500', $gt: '900' } });
     });
     it('should return both numbers', () => {
-      let res = query.byProducts({ calories: '<=500>900<910' });
-      res.should.be.deep.equal({ calories: { $lte: '500', $gt: '900' } });
+      let res = query.byProducts({ calories: '<=500>=900<910' });
+      res.should.be.deep.equal({ calories: { $lte: '500', $gte: '900' } });
     });
   });
 });
