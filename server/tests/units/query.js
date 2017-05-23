@@ -9,6 +9,10 @@ describe('Unit tests - utils/query', () => {
     it('should have property', () => {
       query.should.have.property('byProducts');
     });
+    it('should return {}', () => {
+      let res = query.byProducts({});
+      res.should.be.deep.equal({});
+    });
     it('should return single number', () => {
       let res = query.byProducts({ calories: 500 });
       res.should.be.deep.equal({ calories: '500' });
