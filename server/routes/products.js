@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const Products = require('../models/Products.js');
 const merge = require('../utils/merge.js');
+const query = require('../utils/query.js');
 
 /* POST creates a product */
 router.post('/', (req, res, next) => {
@@ -32,7 +33,6 @@ router.post('/', (req, res, next) => {
 
   product.save(err => {
     if (err) {
-      console.log(err);
       return res.status(500).json({ error: err });
     }
     res.json({
@@ -42,25 +42,15 @@ router.post('/', (req, res, next) => {
   });
 });
 
-/* GET list of products */
+/* Search for products which matches the given search parameters */
 router.get('/', (req, res, next) => {
-  Products.find({},
+  let search = {};
+  search = query.byProducts(req.query);
+  Products.find(search,
     (err, doc) => {
+      /* istanbul ignore if */
       if (err) { return res.status(500).json({ error: err }); }
       res.json(doc);
-    });
-});
-
-/* GET an exsiting product by product name*/
-router.get('/:productname', (req, res, next) => {
-  Products.findOne ({productname: req.params.productname},
-    (err, doc) => {
-      if (err) { return res.status(500).json({ error: err }); }
-      if (doc) {
-        res.json(doc);
-      } else {
-        res.json({error: 'Product does not exist'});
-      }
     });
 });
 
@@ -87,7 +77,6 @@ router.put('/:productname', (req, res, next) => {
         product.save(err => {
           /* istanbul ignore if */
           if (err) {
-            console.log(err);
             return res.status(500).json({ error: err });
           }
           res.json({message: 'Product details changed'});
@@ -100,12 +89,32 @@ router.put('/:productname', (req, res, next) => {
 
 /* DELETE remove a product */
 router.delete('/:productname', (req, res, next) => {
-  Products.remove({ productname: req.params.productname }, err => {
-    if (err) { return res.status(500).json({ error: err }); }
-    res.json({
-      message: 'Product ' + req.params.productname + ' has been removed.',
+  Products.findOneAndRemove({ productname: req.params.productname },
+    (err, product) => {
+      /* istanbul ignore if */
+      if (err) { return res.status(500).json({ error: err }); }
+      if (product) {
+        res.json({
+          message: 'Product ' + req.params.productname + ' has been removed.',
+        });
+      }else {
+        res.json({error: 'Product does not exist'});
+      }
     });
-  });
+});
+
+/* GET an exsiting product */
+router.get('/:product', (req, res, next) => {
+  Products.findOne ({productname: req.params.product},
+    (err, doc) => {
+      /* istanbul ignore if */
+      if (err) { return res.status(500).json({ error: err }); }
+      if (doc) {
+        res.json(doc);
+      } else {
+        res.json({error: 'Product does not exist'});
+      }
+    });
 });
 
 module.exports = router;

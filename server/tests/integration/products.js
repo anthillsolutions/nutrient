@@ -53,7 +53,7 @@ describe('API tests - products', () => {
   });
 
   it('should fail to add an empty object as the product', done => {
-    var product  = {
+    var product = {
     };
     var uri = '/api/products';
     request(server)
@@ -70,7 +70,7 @@ describe('API tests - products', () => {
   });
 
   it('should fail to add new product with empty product name', done => {
-    var product  = {
+    var product = {
       productname: '',
       brand: 'Cadbury',
       amount: '100g',
@@ -95,7 +95,7 @@ describe('API tests - products', () => {
   });
 
   it('should fail to add the same product', done => {
-    var product  = {
+    var product = {
       productname: 'Twirl',
       brand: 'Cadbury',
       amount: '100g',
@@ -135,7 +135,7 @@ describe('API tests - products', () => {
   });
 
   it('should fail to update a non existing product', done => {
-    var product  = {
+    var product = {
       productname: 'Twirl',
       brand: 'Cadbury',
       amount: '100g',
@@ -160,7 +160,7 @@ describe('API tests - products', () => {
   });
 
   it('should fail to be updated with empty product name', done => {
-    var product  = {
+    var product = {
       productname: 'Twirl',
       brand: 'Cadbury',
       amount: '100g',
@@ -216,7 +216,7 @@ describe('API tests - products', () => {
   });
 
   it('should fail to change product to empty object', done => {
-    var product  = {
+    var product = {
       productname: 'Twirl',
       brand: 'Cadbury',
       amount: '100g',
@@ -268,7 +268,7 @@ describe('API tests - products', () => {
   });
 
   it('should add/get/update/delete a product', done => {
-    var product  = {
+    var product = {
       productname: 'Twirl',
       brand: 'Cadbury',
       amount: '100g',
@@ -336,6 +336,116 @@ describe('API tests - products', () => {
                     });
                 });
             }
+          });
+      });
+  });
+
+  it('should fail to delete non existing product', done => {
+    request(server)
+      .delete('/api/products/Twirls')
+      .expect('Content-Type', /json/)
+      .then((res) => {
+        if (res && res.body) {
+          res.body.should.be.a('object');
+          res.body.should.have.property('error');
+        }
+        done();
+      });
+  });
+
+  it('should return results based on the given query', done => {
+    var product = {
+      productname: 'Twirl',
+      brand: 'Cadbury',
+      amount: '100g',
+      nutritionfacts: {
+        calories: {
+          fromCarbohydrates: '535kcal',
+        },
+        protiens: {
+          protien: '7.6g',
+        },
+      },
+    };
+    request(server)
+      .post('/api/products')
+      .send(product)
+      .expect('Content-Type', /json/)
+      .then((res) => {
+        request(server)
+          .get('/api/products/calories=535kcal')
+          .expect('Content-Type', /json/)
+          .then((res) => {
+            request(server)
+              .delete('/api/products/Twirl')
+              .expect('Content-Type', /json/)
+              .expect(200, done);
+          });
+      });
+  });
+
+  it('should return treat the first parameter as the product name', done => {
+    var product = {
+      productname: 'Twirl',
+      brand: 'Cadbury',
+      amount: '100g',
+      nutritionfacts: {
+        calories: {
+          fromCarbohydrates: '535kcal',
+        },
+        protiens: {
+          protien: '7.6g',
+        },
+      },
+    };
+    request(server)
+      .post('/api/products')
+      .send(product)
+      .expect('Content-Type', /json/)
+      .then((res) => {
+        request(server)
+          .get('/api/products/Twirl&calories=535kcal')
+          .expect('Content-Type', /json/)
+          .then((res) => {
+            request(server)
+              .delete('/api/products/Twirl')
+              .expect('Content-Type', /json/)
+              .expect(200, done);
+          });
+      });
+  });
+
+  it('should fail on invalid query parameters', done => {
+    var product = {
+      productname: 'Twirl',
+      brand: 'Cadbury',
+      amount: '100g',
+      nutritionfacts: {
+        calories: {
+          fromCarbohydrates: '535kcal',
+        },
+        protiens: {
+          protien: '7.6g',
+        },
+      },
+    };
+    request(server)
+      .post('/api/products')
+      .send(product)
+      .expect('Content-Type', /json/)
+      .then((res) => {
+        request(server)
+          .get('/api/products/calories=535kcal&Twirl')
+          .expect('Content-Type', /json/)
+          .then((res) => {
+            if (res && res.body) {
+              res.body.should.be.a('object');
+              res.body.should.have.property('error');
+            }
+            request(server)
+              .delete('/api/products/Twirl')
+              .expect('Content-Type', /json/)
+              .expect(200, done);
           });
       });
   });
