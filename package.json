@@ -1,12 +1,15 @@
 {
   "name": "nutrient",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The nutritional fact database's website",
   "main": "index.js",
   "scripts": {
     "postinstall": "gulp build",
     "start": "gulp serve",
     "test": "gulp coverage"
+  },
+  "engines": {
+    "node": "7.10.1"
   },
   "repository": {
     "type": "git",
